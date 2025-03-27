@@ -114,6 +114,58 @@
             color: #666;
             margin-top: 5px;
         }
+
+        @media screen and (max-width: 768px) {
+            body {
+                margin: 10px;
+                font-size: 14px;
+            }
+            
+            .container {
+                width: 100%;
+                padding: 0 10px;
+                box-sizing: border-box;
+            }
+            
+            .control-panel {
+                padding: 10px;
+            }
+            
+            .data-source-options {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            input[type="number"] {
+                width: 50px;
+                padding: 6px;
+            }
+            
+            button {
+                padding: 10px;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .answer-inputs {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            
+            .input-group label {
+                min-width: 120px;
+                display: inline-block;
+            }
+            
+            .check-btn {
+                margin-top: 15px;
+            }
+        }
     </style>
 </head>
 
@@ -135,7 +187,7 @@
             <div>
                 <label for="countInput">请输入要生成的数据组数 (满贯以下1-31/包含满贯1-44): </label>
                 <input type="number" id="countInput" min="1" max="44" value="10">
-                <button class="generate-btn" onclick="generateRandomSelections()">生成随机选择</button>
+                <button class="generate-btn">生成随机选择</button>
                 <div id="errorMsg" class="error"></div>
             </div>
         </div>
@@ -352,6 +404,16 @@
                     feedbackDiv.classList.add('error');
                 }
             }
+
+            document.querySelector('.generate-btn').addEventListener('click', generateRandomSelections);
+            
+            // 使用事件委托处理动态生成的按钮
+            document.body.addEventListener('click', function(e) {
+                if (e.target.classList.contains('check-btn')) {
+                    const itemIndex = parseInt(e.target.getAttribute('data-index'));
+                    checkAnswers(itemIndex);
+                }
+            });
         });
 
     </script>
