@@ -123,11 +123,11 @@
         <div class="control-panel">
             <div class="data-source-options">
                 <div class="data-source-option">
-                    <input type="radio" id="source1" , name="dataSources" , value="1" checked>
+                    <input type="radio" id="source1" name="dataSources" value="1" checked>
                     <label for="source1">满贯以下</label>
                 </div>
                 <div class="data-source-option">
-                    <input type="radio" id="source2" , name="dataSources" , value="2">
+                    <input type="radio" id="source2" name="dataSources" value="2">
                     <label for="source2">包含满贯</label>
                 </div>
 
@@ -143,106 +143,107 @@
     </div>
 
     <script>
-        // 定义所有数据源
-        const dataSources = {
-            1: {
-                name: "满贯以下", data: {
-                    1: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
-                    2: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
-                    3: [20, 25, 30, 40, 50, 60],
-                    4: [20, 25, 30]
+        document.addEventListener('DOMContentLoaded', function () {
+            // 定义所有数据源
+            const dataSources = {
+                1: {
+                    name: "满贯以下", data: {
+                        1: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
+                        2: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
+                        3: [20, 25, 30, 40, 50, 60],
+                        4: [20, 25, 30]
+                    }
+                },
+                2: {
+                    name: "包含满贯", data: {
+                        1: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
+                        2: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
+                        3: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
+                        4: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110]
+                    }
                 }
-            },
-            2: {
-                name: "包含满贯", data: {
-                    1: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
-                    2: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
-                    3: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110],
-                    4: [20, 25, 30, 40, 50, 60, 70, 80, 90, 100, 110]
-                }
-            }
-        };
+            };
 
-        // 修正后的getSelectedSources函数
-        function getSelectedSource() {
-            const selected = document.querySelector('input[name="dataSources"]:checked');
-            return selected ? selected.value : null;
-        }
-
-
-        function generateRandomSelections() {
-            const errorMsg = document.getElementById('errorMsg');
-            const resultDiv = document.getElementById('result');
-            errorMsg.textContent = '';
-            resultDiv.innerHTML = '';
-
-            // 获取用户输入
-            const inputElement = document.getElementById('countInput');
-            let n = parseInt(inputElement.value);
-
-
-            // 获取选中的数据源
-            const sourceKey = getSelectedSource();
-            if (!sourceKey) {
-                errorMsg.textContent = '请选择一个数据源！';
-                return;
+            // 修正后的getSelectedSources函数
+            function getSelectedSource() {
+                const selected = document.querySelector('input[name="dataSources"]:checked');
+                return selected ? selected.value : null;
             }
 
-            const source = dataSources[sourceKey];
-            // 验证输入
 
-            if ((sourceKey == 1)) {
-                if ((isNaN(n) || n < 1 || n > 31)) {
-                    errorMsg.textContent = '请输入1到31之间的整数！';
-                    return;
-                }
-            } else if ((sourceKey == 2)) {
-                if (isNaN(n) || n < 1 || n > 44) {
-                    errorMsg.textContent = '请输入1到44之间的整数！';
+            function generateRandomSelections() {
+                const errorMsg = document.getElementById('errorMsg');
+                const resultDiv = document.getElementById('result');
+                errorMsg.textContent = '';
+                resultDiv.innerHTML = '';
+
+                // 获取用户输入
+                const inputElement = document.getElementById('countInput');
+                let n = parseInt(inputElement.value);
+
+
+                // 获取选中的数据源
+                const sourceKey = getSelectedSource();
+                if (!sourceKey) {
+                    errorMsg.textContent = '请选择一个数据源！';
                     return;
                 }
 
-            }
+                const source = dataSources[sourceKey];
+                // 验证输入
 
-            const sourceData = source.data;
+                if ((sourceKey == 1)) {
+                    if ((isNaN(n) || n < 1 || n > 31)) {
+                        errorMsg.textContent = '请输入1到31之间的整数！';
+                        return;
+                    }
+                } else if ((sourceKey == 2)) {
+                    if (isNaN(n) || n < 1 || n > 44) {
+                        errorMsg.textContent = '请输入1到44之间的整数！';
+                        return;
+                    }
 
-
-
-            // 计算最大可能的选择数
-            let maxN = 0;
-            for (const key in sourceData) {
-                maxN += sourceData[key].length;
-            }
-
-            // 调整n不超过最大值
-            n = Math.min(n, maxN);
-            console.log(n)
-            const selected = new Set(); // 用于去重
-            const results = [];
-
-            while (selected.size < n) {
-                // 1. 从选中的数据源中随机选key
-                const keys = Object.keys(sourceData);
-                const randomKey = keys[Math.floor(Math.random() * keys.length)];
-
-                // 2. 从该key的value列表中随机选一个
-                const values = sourceData[randomKey];
-                const randomValue = values[Math.floor(Math.random() * values.length)];
-
-                // 3. 检查组合是否已选过
-                const combination = `${randomKey}_${randomValue}`;
-                if (!selected.has(combination)) {
-                    selected.add(combination);
-                    results.push({ key: randomKey, value: randomValue });
                 }
-            }
 
-            // 显示结果
-            resultDiv.innerHTML = `<h2>选出的 ${n} 组不重复结果</h2>`;
+                const sourceData = source.data;
 
-            results.forEach((item, index) => {
-                const itemId = `item-${index}`;
-                resultDiv.innerHTML += `
+
+
+                // 计算最大可能的选择数
+                let maxN = 0;
+                for (const key in sourceData) {
+                    maxN += sourceData[key].length;
+                }
+
+                // 调整n不超过最大值
+                n = Math.min(n, maxN);
+                console.log(n)
+                const selected = new Set(); // 用于去重
+                const results = [];
+
+                while (selected.size < n) {
+                    // 1. 从选中的数据源中随机选key
+                    const keys = Object.keys(sourceData);
+                    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+
+                    // 2. 从该key的value列表中随机选一个
+                    const values = sourceData[randomKey];
+                    const randomValue = values[Math.floor(Math.random() * values.length)];
+
+                    // 3. 检查组合是否已选过
+                    const combination = `${randomKey}_${randomValue}`;
+                    if (!selected.has(combination)) {
+                        selected.add(combination);
+                        results.push({ key: randomKey, value: randomValue });
+                    }
+                }
+
+                // 显示结果
+                resultDiv.innerHTML = `<h2>选出的 ${n} 组不重复结果</h2>`;
+
+                results.forEach((item, index) => {
+                    const itemId = `item-${index}`;
+                    resultDiv.innerHTML += `
                     <div class="question-item" id="${itemId}">
                         <p>${index + 1}. ${item.key}番${item.value}符</p>
                         <div class="answer-inputs">
@@ -267,90 +268,92 @@
                         </div>
                     </div>
                 `;
-            });
-        }
-
-        function checkAnswers(itemIndex) {
-            const feedbackDiv = document.getElementById(`feedback-${itemIndex}`);
-            const inputs = document.querySelectorAll(`.answer-input[data-item="${itemIndex}"]`);
-            let allCorrect = true;
-
-            // 清除之前的错误样式和反馈
-            feedbackDiv.textContent = '';
-            feedbackDiv.className = 'feedback';
-            inputs.forEach(input => {
-                input.classList.remove('input-error');
-            });
-
-            // 获取当前问题的番数和符数
-            const questionText = document.querySelector(`#item-${itemIndex} p`).textContent;
-            const key = parseInt(questionText.match(/(\d+)番/)[1]); // 番数
-            const value = parseInt(questionText.match(/番(\d+)符/)[1]); // 符数
-
-            // 计算基础值
-            const baseValue = Math.pow(2, 2 + key) * value;
-
-            // 计算各答案
-            let correctAnswer1 = Math.ceil((baseValue * 4) / 100) * 100;  // 子家直击
-            let correctAnswer2 = Math.ceil((baseValue * 1) / 100) * 100;  // 自摸子家支付
-            let correctAnswer3 = Math.ceil((baseValue * 2) / 100) * 100;  // 自摸亲家支付
-            let correctAnswer4 = Math.ceil((baseValue * 6) / 100) * 100;  // 亲家直击
-
-            if (correctAnswer1 >= 8000) {
-                correctAnswer1 = 8000
-                correctAnswer2 = 2000
-                correctAnswer3 = 4000
-                correctAnswer4 = 12000
+                });
             }
 
-            // 特殊规则处理
-            if (key === 1 && (value === 20 || value === 25)) {
-                correctAnswer1 = null;
-                correctAnswer2 = null;
-                correctAnswer3 = null;
-                correctAnswer4 = null;
-            } else if (key === 1 && value === 110) {
-                correctAnswer2 = null;
-                correctAnswer3 = null;
-            } else if (key === 2 && value === 20) {
-                correctAnswer1 = null;
-                correctAnswer4 = null;
-            } else if (key === 2 && value === 25) {
-                correctAnswer2 = null;
-                correctAnswer3 = null;
-            } else if ((key === 3 || key === 4) && value === 20) {
-                correctAnswer1 = null;
-                correctAnswer4 = null;
-            }
+            function checkAnswers(itemIndex) {
+                const feedbackDiv = document.getElementById(`feedback-${itemIndex}`);
+                const inputs = document.querySelectorAll(`.answer-input[data-item="${itemIndex}"]`);
+                let allCorrect = true;
 
-            // 设置各答案的正确值
-            const correctAnswers = {
-                1: correctAnswer1 !== null ? correctAnswer1.toString() : 'N/A',
-                2: correctAnswer2 !== null ? correctAnswer2.toString() : 'N/A',
-                3: correctAnswer3 !== null ? correctAnswer3.toString() : 'N/A',
-                4: correctAnswer4 !== null ? correctAnswer4.toString() : 'N/A'
-            };
+                // 清除之前的错误样式和反馈
+                feedbackDiv.textContent = '';
+                feedbackDiv.className = 'feedback';
+                inputs.forEach(input => {
+                    input.classList.remove('input-error');
+                });
 
-            // 检查每个输入框
-            inputs.forEach(input => {
-                const answerType = input.getAttribute('data-answer');
-                const userAnswer = input.value.trim();
+                // 获取当前问题的番数和符数
+                const questionText = document.querySelector(`#item-${itemIndex} p`).textContent;
+                const key = parseInt(questionText.match(/(\d+)番/)[1]); // 番数
+                const value = parseInt(questionText.match(/番(\d+)符/)[1]); // 符数
 
-                if (userAnswer !== correctAnswers[answerType]) {
-                    input.classList.add('input-error');
-                    allCorrect = false;
+                // 计算基础值
+                const baseValue = Math.pow(2, 2 + key) * value;
+
+                // 计算各答案
+                let correctAnswer1 = Math.ceil((baseValue * 4) / 100) * 100;  // 子家直击
+                let correctAnswer2 = Math.ceil((baseValue * 1) / 100) * 100;  // 自摸子家支付
+                let correctAnswer3 = Math.ceil((baseValue * 2) / 100) * 100;  // 自摸亲家支付
+                let correctAnswer4 = Math.ceil((baseValue * 6) / 100) * 100;  // 亲家直击
+
+                if (correctAnswer1 >= 8000) {
+                    correctAnswer1 = 8000
+                    correctAnswer2 = 2000
+                    correctAnswer3 = 4000
+                    correctAnswer4 = 12000
                 }
-            });
 
-            // 显示反馈
-            if (allCorrect) {
-                feedbackDiv.textContent = '答案正确！';
-                feedbackDiv.classList.add('correct');
-            } else {
-                feedbackDiv.textContent = '部分答案不正确，请检查红色标记的输入框';
-                feedbackDiv.classList.add('error');
+                // 特殊规则处理
+                if (key === 1 && (value === 20 || value === 25)) {
+                    correctAnswer1 = null;
+                    correctAnswer2 = null;
+                    correctAnswer3 = null;
+                    correctAnswer4 = null;
+                } else if (key === 1 && value === 110) {
+                    correctAnswer2 = null;
+                    correctAnswer3 = null;
+                } else if (key === 2 && value === 20) {
+                    correctAnswer1 = null;
+                    correctAnswer4 = null;
+                } else if (key === 2 && value === 25) {
+                    correctAnswer2 = null;
+                    correctAnswer3 = null;
+                } else if ((key === 3 || key === 4) && value === 20) {
+                    correctAnswer1 = null;
+                    correctAnswer4 = null;
+                }
+
+                // 设置各答案的正确值
+                const correctAnswers = {
+                    1: correctAnswer1 !== null ? correctAnswer1.toString() : 'N/A',
+                    2: correctAnswer2 !== null ? correctAnswer2.toString() : 'N/A',
+                    3: correctAnswer3 !== null ? correctAnswer3.toString() : 'N/A',
+                    4: correctAnswer4 !== null ? correctAnswer4.toString() : 'N/A'
+                };
+
+                // 检查每个输入框
+                inputs.forEach(input => {
+                    const answerType = input.getAttribute('data-answer');
+                    const userAnswer = input.value.trim();
+
+                    if (userAnswer !== correctAnswers[answerType]) {
+                        input.classList.add('input-error');
+                        allCorrect = false;
+                    }
+                });
+
+                // 显示反馈
+                if (allCorrect) {
+                    feedbackDiv.textContent = '答案正确！';
+                    feedbackDiv.classList.add('correct');
+                } else {
+                    feedbackDiv.textContent = '部分答案不正确，请检查红色标记的输入框';
+                    feedbackDiv.classList.add('error');
+                }
             }
-        }
+        });
+
     </script>
 </body>
 
