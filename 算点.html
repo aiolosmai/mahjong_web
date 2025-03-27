@@ -4,51 +4,77 @@
 <head>
     <title>算点练习器</title>
     <style>
+        /* 全局样式 */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            max-width: 1200px;
+            max-width: 2000px;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
         }
 
+        /* 容器样式 */
         .container {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
+        /* 控制面板 */
         .control-panel {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            padding: 15px;
+            padding: 20px;
             background-color: #f5f5f5;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .data-source-options {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
         .data-source-option {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
 
+        /* 输入框和按钮基础样式 */
         input[type="number"] {
-            padding: 8px;
-            width: 60px;
-            margin-right: 5px;
+            padding: 10px 12px;
+            width: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #2196F3;
+            outline: none;
         }
 
         button {
-            padding: 8px 16px;
+            padding: 10px 16px;
             color: white;
             border: none;
             cursor: pointer;
-            width: 150px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         .generate-btn {
@@ -61,43 +87,55 @@
 
         .check-btn {
             background-color: #2196F3;
-            width: auto;
-            padding: 5px 10px;
         }
 
         .check-btn:hover {
             background-color: #0b7dda;
         }
 
+        .help-btn {
+            background-color: #ff9800;
+        }
+
+        .help-btn:hover {
+            background-color: #e68a00;
+        }
+
+        /* 结果区域 */
         #result {
-            margin-top: 20px;
-            line-height: 1.6;
-            border-top: 1px solid #ddd;
-            padding-top: 15px;
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
         }
 
-        .error {
-            color: red;
-            margin-top: 5px;
-        }
-
-        .correct {
-            color: green;
-            margin-top: 5px;
-        }
-
+        /* 问题项布局 */
         .question-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed #eee;
+            margin: 25px 0;
+            padding: 25px;
+            background-color: white;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
 
+        .question-item>p {
+            grid-column: 1 / -1;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #222;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 输入区域 */
         .answer-inputs {
-            margin-top: 5px;
             display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .input-group {
@@ -105,8 +143,73 @@
             align-items: center;
         }
 
+        .input-group label {
+            width: 220px;
+            text-align: right;
+            padding-right: 15px;
+            font-size: 0.95em;
+            color: #555;
+        }
+
         .input-error {
-            border: 2px solid red;
+            border: 2px solid #f44336 !important;
+        }
+
+        .input-correct {
+            border: 2px solid #4CAF50 !important;
+        }
+
+        /* 按钮组 */
+        .button-group {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* 反馈信息 */
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #f44336;
+            border-left: 3px solid #f44336;
+        }
+
+        .correct {
+            background-color: #e8f5e9;
+            color: #4CAF50;
+            border-left: 3px solid #4CAF50;
+        }
+
+        /* 帮助区域 */
+        .help-container {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .help {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .help ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .help li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: #444;
         }
 
         .formula-hint {
@@ -115,66 +218,83 @@
             margin-top: 5px;
         }
 
+        /* GitHub链接 */
         .github-link {
-            margin-top: 30px;
-            padding: 10px;
+            margin-top: 40px;
+            padding: 15px;
+            text-align: center;
         }
-        
+
         .github-link a {
             color: #0366d6;
             text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
         }
-        
 
-        @media screen and (max-width: 768px) {
-            body {
-                margin: 10px;
-                font-size: 14px;
+        .github-link a:hover {
+            color: #052f5f;
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media screen and (max-width: 900px) {
+            .question-item {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
             }
 
-            .container {
-                width: 100%;
-                padding: 0 10px;
-                box-sizing: border-box;
-            }
-
-            .control-panel {
-                padding: 10px;
-            }
-
-            .data-source-options {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            input[type="number"] {
-                width: 50px;
-                padding: 6px;
-            }
-
-            button {
-                padding: 10px;
-                width: 100%;
-                margin-top: 10px;
-            }
-
-            .answer-inputs {
+            .input-group {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .input-group {
+            .input-group label {
+                text-align: left;
                 width: 100%;
+                padding-right: 0;
                 margin-bottom: 8px;
             }
 
-            .input-group label {
-                min-width: 120px;
-                display: inline-block;
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
             }
 
-            .check-btn {
-                margin-top: 15px;
+            .help-container {
+                margin-top: 25px;
+                border-left: none;
+                border-top: 3px solid #ff9800;
+                padding-top: 20px;
+            }
+
+            input[type="number"] {
+                width: 100%;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            body {
+                margin: 15px;
+                font-size: 15px;
+            }
+
+            .control-panel {
+                padding: 15px;
+            }
+
+            .data-source-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .question-item {
+                padding: 15px;
             }
         }
     </style>
@@ -309,34 +429,55 @@
 
                 // 显示结果
                 resultDiv.innerHTML = `<h2>选出的 ${n} 组结果</h2>`;
-
                 results.forEach((item, index) => {
                     const itemId = `item-${index}`;
                     resultDiv.innerHTML += `
-    <div class="question-item" id="${itemId}">
-        <p>${index + 1}. ${item.key}番${item.value}符</p>
-        <div class="answer-inputs">
-            <div class="input-group">
-                <label>子家直击:</label>
-                <input type="number" class="answer-input" data-item="${index}" data-answer="1">
-            </div>
-            <div class="input-group">
-                <label>自摸子家支付:</label>
-                <input type="number" class="answer-input" data-item="${index}" data-answer="2">
-            </div>
-            <div class="input-group">
-                <label>自摸亲家支付/自摸亲家收取:</label>
-                <input type="number" class="answer-input" data-item="${index}" data-answer="3">
-            </div>
-            <div class="input-group">
-                <label>亲家直击:</label>
-                <input type="number" class="answer-input" data-item="${index}" data-answer="4">
-            </div>
-            <button class="check-btn" data-index="${index}">验证答案</button>
-            <div id="feedback-${index}" class="feedback"></div>
+<div class="question-item" id="${itemId}">
+    <p>${index + 1}. ${item.key}番${item.value}符</p>
+    
+    <div class="answer-inputs">
+        <div class="input-group">
+            <label>子家直击:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="1">
         </div>
+        <div class="input-group">
+            <label>自摸子家支付:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="2">
+        </div>
+        <div class="input-group">
+            <label>自摸亲家支付/收取:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="3">
+        </div>
+        <div class="input-group">
+            <label>亲家直击:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="4">
+        </div>
+        <div class="input-group">
+            <label>子家自摸追子家分:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="5">
+        </div>
+        <div class="input-group">
+            <label>子家自摸追亲家分:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="6">
+        </div>
+        <div class="input-group">
+            <label>亲家自摸追分:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="7">
+        </div>
+        
+        <div class="button-group">
+            <button class="check-btn" data-index="${index}">验证答案</button>
+            <button class="help-btn" data-index="${index}">获取答案</button>
+        </div>
+        
+        <div id="feedback-${index}" class="feedback"></div>
     </div>
-    `;
+    
+    <div class="help-container">
+        <div id="help-${index}" class="help"></div>
+    </div>
+</div>
+`;
                 });
             }
             function checkAnswers(itemIndex) {
@@ -403,12 +544,19 @@
                     correctAnswer4 = 0;
                 }
 
+                let correctAnswer5 = correctAnswer2 * 2 + correctAnswer3 + correctAnswer2
+                let correctAnswer6 = correctAnswer2 * 2 + correctAnswer3 + correctAnswer3
+                let correctAnswer7 = correctAnswer3 * 3 + correctAnswer3
+
                 // 设置各答案的正确值
                 const correctAnswers = {
                     1: correctAnswer1.toString(),
                     2: correctAnswer2.toString(),
                     3: correctAnswer3.toString(),
-                    4: correctAnswer4.toString()
+                    4: correctAnswer4.toString(),
+                    5: correctAnswer5.toString(),
+                    6: correctAnswer6.toString(),
+                    7: correctAnswer7.toString(),
                 };
 
                 // 检查每个输入框
@@ -419,6 +567,8 @@
                     if (userAnswer !== correctAnswers[answerType]) {
                         input.classList.add('input-error');
                         allCorrect = false;
+                    }else{
+                        input.classList.add('input-correct');
                     }
                 });
 
@@ -441,7 +591,112 @@
                     checkAnswers(itemIndex);
                 }
 
-                // check-btn
+            });
+
+            // 修改showAnswers函数，添加切换功能
+            function toggleAnswers(itemIndex) {
+                const questionItem = document.querySelector(`#item-${itemIndex}`);
+                if (!questionItem) return;
+
+                const helpDiv = questionItem.querySelector(`#help-${itemIndex}`);
+                if (!helpDiv) return;
+
+                // 如果答案已经显示，则隐藏
+                if (helpDiv.innerHTML.trim() !== '') {
+                    helpDiv.innerHTML = '';
+                    return;
+                }
+
+                // 获取当前问题的番数和符数
+                const questionText = document.querySelector(`#item-${itemIndex} p`).textContent;
+                const key = parseInt(questionText.match(/(\d+)番/)[1]); // 番数
+                const value = parseInt(questionText.match(/番(\d+)符/)[1]); // 符数
+
+                // 计算基础值
+                const baseValue = Math.pow(2, 2 + key) * value;
+
+                // 计算各答案
+                let answers = {
+                    "子家直击": Math.ceil((baseValue * 4) / 100) * 100,
+                    "自摸子家支付": Math.ceil((baseValue * 1) / 100) * 100,
+                    "自摸亲家支付": Math.ceil((baseValue * 2) / 100) * 100,
+                    "亲家直击": Math.ceil((baseValue * 6) / 100) * 100,
+                    "子家自摸追子家分": 0,
+                    "子家自摸追亲家分": 0,
+                    "亲家自摸追分": 0,
+                };
+
+                // 特殊规则处理
+                if (answers["子家直击"] >= 8000) {
+                    answers = {
+                        "子家直击": 8000,
+                        "自摸子家支付": 2000,
+                        "自摸亲家支付": 4000,
+                        "亲家直击": 12000
+                    };
+                }
+
+                // 特殊组合处理
+                if (key === 1 && (value === 20 || value === 25)) {
+                    answers = {
+                        "子家直击": 0,
+                        "自摸子家支付": 0,
+                        "自摸亲家支付": 0,
+                        "亲家直击": 0
+                    };
+                } else if (key === 1 && value === 110) {
+                    answers["自摸子家支付"] = 0;
+                    answers["自摸亲家支付"] = 0;
+                } else if (key === 2 && value === 20) {
+                    answers["子家直击"] = 0;
+                    answers["亲家直击"] = 0;
+                } else if (key === 2 && value === 25) {
+                    answers["自摸子家支付"] = 0;
+                    answers["自摸亲家支付"] = 0;
+                } else if ((key === 3 || key === 4) && value === 20) {
+                    answers["子家直击"] = 0;
+                    answers["亲家直击"] = 0;
+                }
+
+                answers["子家自摸追子家分"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"] + answers["自摸子家支付"],
+                    answers["子家自摸追亲家分"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"] + answers["自摸亲家支付"],
+                    answers["亲家自摸追分"] = answers["自摸亲家支付"] * 3 + answers["自摸亲家支付"]
+
+                // 显示答案
+                helpDiv.innerHTML = `
+        <div class="formula-hint">
+            <p>正确答案:</p>
+            <ul>
+                <li>子家直击: ${answers["子家直击"]}</li>
+                <li>自摸子家支付: ${answers["自摸子家支付"]}</li>
+                <li>自摸亲家支付: ${answers["自摸亲家支付"]}</li>
+                <li>亲家直击: ${answers["亲家直击"]}</li>
+                <li>子家自摸追子家分: ${answers["子家自摸追子家分"]}</li>
+                <li>子家自摸追亲家分: ${answers["子家自摸追亲家分"]}</li>
+                <li>亲家自摸追分: ${answers["亲家自摸追分"]}</li>
+            </ul>
+        </div>
+    `;
+            }
+
+            // 修改事件监听器
+            document.body.addEventListener('click', function (e) {
+                if (e.target.classList.contains('check-btn')) {
+                    const itemIndex = parseInt(e.target.getAttribute('data-index'));
+                    checkAnswers(itemIndex);
+                }
+                if (e.target.classList.contains('help-btn')) {
+                    const itemIndex = parseInt(e.target.getAttribute('data-index'));
+                    toggleAnswers(itemIndex);
+
+                    // 切换按钮文本
+                    const helpDiv = document.querySelector(`#item-${itemIndex} #help-${itemIndex}`);
+                    if (helpDiv.innerHTML.trim() !== '') {
+                        e.target.textContent = '隐藏答案';
+                    } else {
+                        e.target.textContent = '获取答案';
+                    }
+                }
             });
 
         });
