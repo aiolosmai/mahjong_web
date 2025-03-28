@@ -291,6 +291,31 @@
             text-decoration: underline;
         }
 
+        .formula-hint li span span {
+            display: inline-block;
+            /* 使内层span可以应用padding */
+            padding: 2px 0;
+            /* 上下增加一些间距 */
+            line-height: 1.4;
+            /* 增加行高 */
+            font-size: 0.9em;
+            /* 稍微减小字体大小 */
+            white-space: normal;
+            /* 允许文字换行 */
+            color: #666;
+            /* 使用更柔和的颜色 */
+            margin-left: 5px;
+            /* 增加左边距 */
+        }
+
+        /* 或者使用flex布局方案 */
+        .formula-hint li span {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+
         /* 响应式设计 */
         @media screen and (max-width: 900px) {
             .question-item {
@@ -610,7 +635,7 @@
                 let correctAnswer6 = correctAnswer2 * 2 + correctAnswer3 + correctAnswer3
                 let correctAnswer7 = correctAnswer3 * 3 + correctAnswer3
 
-                let correctAnswer8 = correctAnswer2 * 2 + correctAnswer3 
+                let correctAnswer8 = correctAnswer2 * 2 + correctAnswer3
                 let correctAnswer9 = correctAnswer3 * 3
 
 
@@ -692,8 +717,8 @@
                     "子家自摸追子家分": 0,
                     "子家自摸追亲家分": 0,
                     "亲家自摸追分": 0,
-                    "子家自摸得点":0,
-                    "亲家自摸得点":0,
+                    "子家自摸得点": 0,
+                    "亲家自摸得点": 0,
                 };
 
                 // 特殊规则处理
@@ -736,52 +761,124 @@
                 answers["亲家自摸得点"] = answers["自摸亲家支付"] * 3
 
                 // 显示答案
-                helpDiv.innerHTML = `
-<div class="formula-hint">
-    <p>正确答案:</p>
-    <ul>
-        <li>
-            <span>子家直击:</span>
-            <span>${answers["子家直击"]}</span>
-        </li>
-        <li>
-            <span>自摸子家支付:</span>
-            <span>${answers["自摸子家支付"]}</span>
-        </li>
-        <li>
-            <span>自摸亲家支付:</span>
-            <span>${answers["自摸亲家支付"]}</span>
-        </li>
-        <li>
-            <span>亲家直击:</span>
-            <span>${answers["亲家直击"]}</span>
-        </li>
-        <li>
-            <span>子家自摸得点:</span>
-            <span>${answers["子家自摸得点"]}</span>
-        </li>
-        <li>
-            <span>子家自摸追子家分:
-            <small>(自摸子家支付×3+自摸子家支付)</small>
-            </span>
-            <span>${answers["子家自摸追子家分"]}</span>
-        </li>
-        <li>
-            <span>子家自摸追亲家分: <small>(自摸子家支付×2+自摸子家支付×2)</small></span>
-            <span>${answers["子家自摸追亲家分"]}</span>
-           
-        </li>
-        <li>
-            <span>亲家自摸得点:</span>
-            <span>${answers["亲家自摸得点"]}</span>
-        </li>
-        <li>
-            <span>亲家自摸追分:<small>(自摸亲家支付×4)</small></span>
-            <span>${answers["亲家自摸追分"]}</span>
-        </li>
-    </ul>
-</div>
-    `;
+                helpDiv.innerHTML =`
+                    <div class="formula-hint">
+                        <p>正确答案:</p>
+                        <ul>
+                            <li>
+                                <span>
+                                    子家直击:
+                                </span>
+                                <span>${answers["子家直击"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    自摸子家支付:
+                                </span>
+                                <span>${answers["自摸子家支付"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    自摸亲家支付:
+                                </span>
+                                <span>${answers["自摸亲家支付"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    亲家直击:
+                                </span>
+                                <span>${answers["亲家直击"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    子家自摸得点:
+                                </span>
+                                <span>${answers["子家自摸得点"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    子家自摸追子家分:
+                                </span>
+                                <span>${answers["子家自摸追子家分"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    子家自摸追亲家分:
+                                </span>
+                                <span>${answers["子家自摸追亲家分"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    亲家自摸得点:
+                                </span>
+                                <span>${answers["亲家自摸得点"]}</span>
+                            </li>
+                            <li>
+                                <span>
+                                    亲家自摸追分:
+                                </span>
+                                <span>${answers["亲家自摸追分"]}</span>
+                            </li>
+                        </ul>
+                        <p>规则和规律:</p>
+                        <ul>
+                            <li>
+                                <span>
+                                    子家直击:
+
+                                </span>
+                                <span>(30符为基准,每增加10符,加300/600/1200,例外情况额外+100)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    自摸子家支付:
+                                </span>
+                                <span>(子家直击/4向上取整)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    自摸亲家支付:
+                                </span>
+                                <span>(子家直击/2向上取整)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    亲家直击:
+                                </span>
+                                <span>(子家直击+自摸亲家支付,例外情况额外-100)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    子家自摸得点:
+                                </span>
+                                <span>(自摸亲家支付×2,自摸比例非1:2则+100)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    子家自摸追子家分:
+                                </span>
+                                <span>(自摸子家支付×5,自摸比例非1:2则-100)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    子家自摸追亲家分:
+                                </span>
+                                <span>(自摸亲家支付×3,自摸比例非1:2则+100)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    亲家自摸得点:
+                                </span>
+                                <span>(自摸亲家支付×3)</span>
+                            </li>
+                            <li>
+                                <span>
+                                    亲家自摸追分:
+                                </span>
+                                <span>(自摸亲家支付×4)</span>
+                            </li>
+                        </ul>
+                    </div>`;
             }
 
             // 修改事件监听器
