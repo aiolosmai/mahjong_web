@@ -213,9 +213,63 @@
         }
 
         .formula-hint {
-            font-size: 0.9em;
+            font-size: 0.95em;
+            color: #444;
+            margin-top: 15px;
+        }
+
+        .formula-hint p {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.05em;
+        }
+
+        .formula-hint ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .formula-hint li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+            line-height: 1.5;
+        }
+
+        /* 使用伪元素创建对齐线 */
+        .formula-hint li::before {
+            content: "";
+            flex: 1;
+            order: 1;
+            border-bottom: 1px dotted #ccc;
+            margin: 0 8px;
+        }
+
+        /* 标签部分 */
+        .formula-hint li span:first-child {
+            order: 0;
+            white-space: nowrap;
+        }
+
+        /* 数字部分 */
+        .formula-hint li span:last-child {
+            order: 2;
+            font-family: monospace;
+            font-weight: bold;
+            color: #2196F3;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        /* 括号说明部分 */
+        .formula-hint li small {
+            order: 3;
             color: #666;
-            margin-top: 5px;
+            font-size: 0.85em;
+            margin-left: 8px;
+            font-style: italic;
         }
 
         /* GitHub链接 */
@@ -453,12 +507,20 @@
             <input type="number" class="answer-input" data-item="${index}" data-answer="4">
         </div>
         <div class="input-group">
+            <label>子家自摸得点:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="8">
+        </div>
+        <div class="input-group">
             <label>子家自摸追子家分:</label>
             <input type="number" class="answer-input" data-item="${index}" data-answer="5">
         </div>
         <div class="input-group">
             <label>子家自摸追亲家分:</label>
             <input type="number" class="answer-input" data-item="${index}" data-answer="6">
+        </div>
+        <div class="input-group">
+            <label>亲家自摸得点:</label>
+            <input type="number" class="answer-input" data-item="${index}" data-answer="9">
         </div>
         <div class="input-group">
             <label>亲家自摸追分:</label>
@@ -548,6 +610,10 @@
                 let correctAnswer6 = correctAnswer2 * 2 + correctAnswer3 + correctAnswer3
                 let correctAnswer7 = correctAnswer3 * 3 + correctAnswer3
 
+                let correctAnswer8 = correctAnswer2 * 2 + correctAnswer3 
+                let correctAnswer9 = correctAnswer3 * 3
+
+
                 // 设置各答案的正确值
                 const correctAnswers = {
                     1: correctAnswer1.toString(),
@@ -557,6 +623,8 @@
                     5: correctAnswer5.toString(),
                     6: correctAnswer6.toString(),
                     7: correctAnswer7.toString(),
+                    8: correctAnswer8.toString(),
+                    9: correctAnswer9.toString(),
                 };
 
                 // 检查每个输入框
@@ -567,7 +635,7 @@
                     if (userAnswer !== correctAnswers[answerType]) {
                         input.classList.add('input-error');
                         allCorrect = false;
-                    }else{
+                    } else {
                         input.classList.add('input-correct');
                     }
                 });
@@ -624,6 +692,8 @@
                     "子家自摸追子家分": 0,
                     "子家自摸追亲家分": 0,
                     "亲家自摸追分": 0,
+                    "子家自摸得点":0,
+                    "亲家自摸得点":0,
                 };
 
                 // 特殊规则处理
@@ -658,24 +728,59 @@
                     answers["亲家直击"] = 0;
                 }
 
-                answers["子家自摸追子家分"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"] + answers["自摸子家支付"],
-                    answers["子家自摸追亲家分"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"] + answers["自摸亲家支付"],
-                    answers["亲家自摸追分"] = answers["自摸亲家支付"] * 3 + answers["自摸亲家支付"]
+                answers["子家自摸追子家分"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"] + answers["自摸子家支付"]
+                answers["子家自摸追亲家分"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"] + answers["自摸亲家支付"]
+                answers["亲家自摸追分"] = answers["自摸亲家支付"] * 3 + answers["自摸亲家支付"]
+
+                answers["子家自摸得点"] = answers["自摸子家支付"] * 2 + answers["自摸亲家支付"]
+                answers["亲家自摸得点"] = answers["自摸亲家支付"] * 3
 
                 // 显示答案
                 helpDiv.innerHTML = `
-        <div class="formula-hint">
-            <p>正确答案:</p>
-            <ul>
-                <li>子家直击: ${answers["子家直击"]}</li>
-                <li>自摸子家支付: ${answers["自摸子家支付"]}</li>
-                <li>自摸亲家支付: ${answers["自摸亲家支付"]}</li>
-                <li>亲家直击: ${answers["亲家直击"]}</li>
-                <li>子家自摸追子家分: ${answers["子家自摸追子家分"]}</li>
-                <li>子家自摸追亲家分: ${answers["子家自摸追亲家分"]}</li>
-                <li>亲家自摸追分: ${answers["亲家自摸追分"]}</li>
-            </ul>
-        </div>
+<div class="formula-hint">
+    <p>正确答案:</p>
+    <ul>
+        <li>
+            <span>子家直击:</span>
+            <span>${answers["子家直击"]}</span>
+        </li>
+        <li>
+            <span>自摸子家支付:</span>
+            <span>${answers["自摸子家支付"]}</span>
+        </li>
+        <li>
+            <span>自摸亲家支付:</span>
+            <span>${answers["自摸亲家支付"]}</span>
+        </li>
+        <li>
+            <span>亲家直击:</span>
+            <span>${answers["亲家直击"]}</span>
+        </li>
+        <li>
+            <span>子家自摸得点:</span>
+            <span>${answers["子家自摸得点"]}</span>
+        </li>
+        <li>
+            <span>子家自摸追子家分:
+            <small>(自摸子家支付×3+自摸子家支付)</small>
+            </span>
+            <span>${answers["子家自摸追子家分"]}</span>
+        </li>
+        <li>
+            <span>子家自摸追亲家分: <small>(自摸子家支付×2+自摸子家支付×2)</small></span>
+            <span>${answers["子家自摸追亲家分"]}</span>
+           
+        </li>
+        <li>
+            <span>亲家自摸得点:</span>
+            <span>${answers["亲家自摸得点"]}</span>
+        </li>
+        <li>
+            <span>亲家自摸追分:<small>(自摸亲家支付×4)</small></span>
+            <span>${answers["亲家自摸追分"]}</span>
+        </li>
+    </ul>
+</div>
     `;
             }
 
